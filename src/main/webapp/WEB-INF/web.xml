@@ -2,13 +2,45 @@
 <!-- This web.xml file is not required when using Servlet 3.0 container,
      see implementation details http://jersey.java.net/nonav/documentation/latest/jax-rs.html -->
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-    <!-- https://enable-cors.org/server_tomcat.html for enabling cross domain requests -->
+
+    <!-- https://stackoverflow.com/questions/12383109/access-control-allow-origin-in-tomcat for enabling cross domain requests -->
     <filter>
-        <filter-name>CorsFilter</filter-name>
-        <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>
+            org.springframework.web.filter.DelegatingFilterProxy
+        </filter-class>
     </filter>
+
     <filter-mapping>
-        <filter-name>CorsFilter</filter-name>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>CORS</filter-name>
+        <filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
+
+        <init-param>
+            <param-name>cors.allowOrigin</param-name>
+            <param-value>*</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cors.supportsCredentials</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cors.supportedHeaders</param-name>
+            <param-value>accept, authorization, origin</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cors.supportedMethods</param-name>
+            <param-value>GET, POST, HEAD, OPTIONS</param-value>
+        </init-param>
+    </filter>
+
+
+    <filter-mapping>
+        <filter-name>CORS</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
