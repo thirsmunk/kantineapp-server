@@ -122,6 +122,14 @@
             <version>1.7.5</version>
         </dependency>
 
+        <!-- https://stackoverflow.com/questions/22634691/apache-tomcat-catalina-as-maven-dependency-for-cors-filter necessary for CORS filter enabled in web.xml for cross domain requests -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>7.0.42</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <!-- uncomment this to get JSON support
         <dependency>
