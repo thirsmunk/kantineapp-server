@@ -122,18 +122,12 @@
             <version>1.7.5</version>
         </dependency>
 
-        <!-- https://stackoverflow.com/questions/12383109/access-control-allow-origin-in-tomcat necessary for CORS filter enabled in web.xml for cross domain requests -->
+        <!-- http://tomcat.apache.org/tomcat-7.0-doc/config/filter.html#CORS_Filter maven dependency -->
         <dependency>
-            <groupId>com.thetransactioncompany</groupId>
-            <artifactId>cors-filter</artifactId>
-            <version>1.3.2</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-web necessary for org.springframework.web.filter.DelegatingFilterProxy -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>3.0.4.RELEASE</version>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>7.0.42</version>
+            <scope>provided</scope>
         </dependency>
 
 
