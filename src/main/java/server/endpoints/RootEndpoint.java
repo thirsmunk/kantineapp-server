@@ -26,11 +26,12 @@ public class RootEndpoint {
         //if encryption is true in config file
         //decrypt userAsJson from a Json object containing a encrypted Json object to contain a decrypted Json object
         userAsJson = encryption.encryptDecryptXOR(userAsJson);
+
         // parse json object
         User user = new Gson().fromJson(userAsJson, User.class);
 
         //Logikken der tjekker, hvorvidt en bruger findes eller ej
-        try {
+
             User loginUser = auth.getMcontroller().authorizeUser(user);
 
             if (loginUser == null) {
@@ -47,10 +48,6 @@ public class RootEndpoint {
                 return Response.status(200).type("application/json").entity(encryption.encryptDecryptXOR(jsonUser)).build();
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Response.status(401).type("plain/text").entity("Forbidden access - login").build();
     }
 
     /**
