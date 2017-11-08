@@ -3,7 +3,6 @@ package server.endpoints;
 import com.google.gson.Gson;
 import server.authentication.Secured;
 import server.controllers.StaffController;
-import server.database.DBConnection;
 import server.models.Order;
 import server.utility.Encryption;
 import server.utility.Globals;
@@ -42,7 +41,7 @@ public class StaffEndpoint {
                 .status(status)
                 .type("application/json")
                 //encrypt response
-                .entity(encryption.encryptXOR(ordersAsJson))
+                .entity(encryption.encryptDecryptXOR(ordersAsJson))
                 .build();
     }
 
@@ -57,7 +56,7 @@ public class StaffEndpoint {
     @POST
     @Path("/makeReady/{orderid}")
     public Response makeReady(@PathParam("orderid") int orderID, String jsonOrder) {
-        jsonOrder = encryption.decryptXOR(jsonOrder);
+        jsonOrder = encryption.encryptDecryptXOR(jsonOrder);
         Order orderReady = new Gson().fromJson(jsonOrder, Order.class);
         int status = 500;
         Boolean isReady = staffController.makeReady(orderID);
@@ -71,7 +70,7 @@ public class StaffEndpoint {
                 .status(status)
                 .type("application/json")
                 //encrypt response to client
-                .entity(encryption.encryptXOR("{\"isReady\":\"" + isReady + "\"}"))
+                .entity(encryption.encryptDecryptXOR("{\"isReady\":\"" + isReady + "\"}"))
                 .build();
     }
 }

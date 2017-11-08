@@ -25,7 +25,7 @@ public class RootEndpoint {
     public Response login(String userAsJson) {
         //if encryption is true in config file
         //decrypt userAsJson from a Json object containing a encrypted Json object to contain a decrypted Json object
-        userAsJson = encryption.decryptXOR(userAsJson);
+        userAsJson = encryption.encryptDecryptXOR(userAsJson);
         // parse json object
         User user = new Gson().fromJson(userAsJson, User.class);
 
@@ -44,7 +44,7 @@ public class RootEndpoint {
                 String jsonUser = new Gson().toJson(loginUser, User.class);
 
                 //return encrypted object in json format
-                return Response.status(200).type("application/json").entity(encryption.encryptXOR(jsonUser)).build();
+                return Response.status(200).type("application/json").entity(encryption.encryptDecryptXOR(jsonUser)).build();
             }
 
         } catch (Exception e) {
