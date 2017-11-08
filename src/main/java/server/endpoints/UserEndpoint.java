@@ -28,7 +28,7 @@ public class UserEndpoint {
      *
      * @param jsonUser
      * @return Response true or false
-     * Creates an user in the database and assigns a token through the AuthEndpoint class.
+     * Creates an user in the database and assigns a token through the Authentication class.
      * {"username":"****", "password":"****"}
      */
     @POST

@@ -22,33 +22,29 @@ import java.util.Date;
 /**
  * This class is the endpoint for authenticating the user
  */
-public class AuthEndpoint {
+public class Authentication {
     private MainController mcontroller = new MainController();
 
     /**
      * Authenticates the user and returns a token if user exists
      *
-     * @param jsonUser
+     * @param user user object authorized by communication with the database
      * @return
      */
-    public String AuthUser(String jsonUser) {
-        User user = new Gson().fromJson(jsonUser, User.class);
-        String token = null;
+    public String AuthUser(User user) {
+        String token = "";
         Date expDate;
-        User tokenUser;
 
-        try {
-            tokenUser = mcontroller.authorizeUser(user);
             try {
                 Algorithm algorithm = Algorithm.HMAC256("secret");
                 long timevalue;
                 timevalue = (System.currentTimeMillis() * 1000) + 20000205238L;
                 expDate = new Date(timevalue);
 
-                token = JWT.create().withClaim("username", tokenUser.getUsername()).withKeyId(String.valueOf(tokenUser.getUserId()))
+                token = JWT.create().withClaim("username", user.getUsername()).withKeyId(String.valueOf(user.getUserId()))
                         .withExpiresAt(expDate).withIssuer("YOLO").sign(algorithm);
-                //Add exp date?
-                mcontroller.createToken(tokenUser, token);
+
+                mcontroller.createToken(user, token);
 
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -57,9 +53,7 @@ public class AuthEndpoint {
             }
 
             return token;
-        } catch (Exception e) {
-            return "User not authorized";
-        }
+
 
     }
 

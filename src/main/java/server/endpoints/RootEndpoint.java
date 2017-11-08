@@ -1,7 +1,7 @@
 package server.endpoints;
 
 import com.google.gson.Gson;
-import server.authentication.AuthEndpoint;
+import server.authentication.Authentication;
 import server.authentication.Secured;
 import server.models.User;
 import server.utility.Encryption;
@@ -12,11 +12,10 @@ import javax.ws.rs.core.Response;
 
 @Path("/start")
 public class RootEndpoint {
-    private AuthEndpoint auth = new AuthEndpoint();
+    private Authentication auth = new Authentication();
     private Encryption encryption = new Encryption();
 
     /**
-     *
      * @param userAsJson
      * @return Response with entity as a userAsJson that includes a token to be used for authorization
      * Gives user access to endpoint methods through assigning them a token.
@@ -29,26 +28,32 @@ public class RootEndpoint {
         userAsJson = encryption.decryptXOR(userAsJson);
         // parse json object
         User user = new Gson().fromJson(userAsJson, User.class);
+
         //Logikken der tjekker, hvorvidt en bruger findes eller ej
         try {
             User loginUser = auth.getMcontroller().authorizeUser(user);
-            loginUser.setToken(auth.AuthUser(userAsJson));
-            String jsonUser = new Gson().toJson(loginUser, User.class);
+
             if (loginUser == null) {
+
                 return Response.status(401).type("plain/text").entity("User not authorized").build();
+
             } else {
-                //return encrypted object in Json format
+
+                loginUser.setToken(auth.AuthUser(loginUser));
+
+                String jsonUser = new Gson().toJson(loginUser, User.class);
+
+                //return encrypted object in json format
                 return Response.status(200).type("application/json").entity(encryption.encryptXOR(jsonUser)).build();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Response.status(401).type("plain/text").entity("Bruger ikke godkendt").build();
+        return Response.status(401).type("plain/text").entity("Forbidden access - login").build();
     }
 
     /**
-     *
      * @param userAsJson
      * @return Plain text based on whether or not logout was successful.
      * Logout for users, deletes token in database (as well as all previous ones if they forgot to logout in an earlier visit).
@@ -59,14 +64,13 @@ public class RootEndpoint {
     public Response logout(String userAsJson) {
         User userFromJson = new Gson().fromJson(userAsJson, User.class);
         boolean deleted = auth.getMcontroller().deleteToken(userFromJson.getUserId());
-        if (deleted){
+        if (deleted) {
             return Response
                     .status(200)
                     .type("plain/text")
                     .entity("Logged out.")
                     .build();
-        }
-        else{
+        } else {
             return Response
                     .status(500)
                     .type("plain/text")
