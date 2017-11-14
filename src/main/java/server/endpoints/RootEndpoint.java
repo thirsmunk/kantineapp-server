@@ -16,23 +16,35 @@ public class RootEndpoint {
     private Encryption encryption = new Encryption();
 
     /**
-     * @param userAsJson
+     * @param encryptedJSON
      * @return Response with entity as a userAsJson that includes a token to be used for authorization
      * Gives user access to endpoint methods through assigning them a token.
      */
     @POST
     @Path("/login")
-    public Response login(String userAsJson) {
+    public Response login(String encryptedJSON) {
+        User user;
+        User loginUser;
+        String decryptedJSON;
+
         //if encryption is true in config file
         //decrypt userAsJson from a Json object containing a encrypted Json object to contain a decrypted Json object
-        userAsJson = encryption.encryptDecryptXOR(userAsJson);
+        decryptedJSON = encryption.encryptDecryptXOR(encryptedJSON);
 
         // parse json object
-        User user = new Gson().fromJson(userAsJson, User.class);
+        user = new Gson().fromJson(decryptedJSON, User.class);
+
+        if(user == null) {
+            return Response
+                    .status(404)
+                    .type("plain/text")
+                    .entity("Server error, user fail")
+                    .build();
+        }
 
         //Logikken der tjekker, hvorvidt en bruger findes eller ej
 
-            User loginUser = auth.getMcontroller().authorizeUser(user);
+            loginUser = auth.getMcontroller().authorizeUser(user);
 
             if (loginUser == null) {
 
