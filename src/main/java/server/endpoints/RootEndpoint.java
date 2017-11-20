@@ -58,12 +58,15 @@ public class RootEndpoint {
 
                 loginUser.setToken(auth.AuthUser(loginUser));
 
-                String jsonUser = new Gson().toJson(loginUser, User.class);
+                //test without User.class after loginUser
+                String jsonUser = new Gson().toJson(loginUser);
+
+                System.out.print("" + jsonUser);
 
                 //return encrypted object in json format
                 return Response
                         .status(200)
-                        .type("application/json")
+                        .type("plain/text")
                         .entity(encryption.encryptDecryptXOR(jsonUser))
                         .build();
             }
