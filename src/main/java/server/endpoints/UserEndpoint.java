@@ -61,7 +61,7 @@ public class UserEndpoint {
 
         return Response
                 .status(status)
-                .type("application/json")
+                .type("plain/text")
                 //encrypt response to clien before sending
                 .entity(encryption.encryptDecryptXOR("{\"userCreated\":\""+ result +"\"}"))
                 .build();
