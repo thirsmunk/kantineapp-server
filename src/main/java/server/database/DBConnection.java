@@ -93,22 +93,18 @@ public class DBConnection {
      * @return Returns an ArrayList of Orders from the database.
      */
     public ArrayList<Order> getOrders() {
-
         /**
          * Creates ResultSet to filter through all Orders.
          * Creates ArrayList which will ultimately be the end product.
          */
         ResultSet resultSet = null;
         ArrayList<Order> orders = new ArrayList<>();
-
         try {
             PreparedStatement getOrders = connection.prepareStatement(
-                    "SELECT o.order_id,o.orderTime,o.isReady,o.user_userid, i.item_id, i.ItemName, i.itemDescription, i.itemPrice FROM ((Orders o\n" +
-                            "INNER JOIN Order_has_Items oi ON o.order_id = oi.Orders_orderId)\n" +
-                            "INNER JOIN Items i ON i.item_id = oi.Items_itemId)");
-
+                    "SELECT Orders.order_id, Orders.orderTime, Orders.isReady, Orders.user_userid, Items.item_id, Items.ItemName, Items.itemDescription, Items.itemPrice FROM ((Order_has_Items " +
+                            "INNER JOIN Orders ON Orders.order_id = Order_has_Items.Orders_orderId) " +
+                            "INNER JOIN Items ON Items.item_id = Order_has_Items.Items_itemId)");
             resultSet = getOrders.executeQuery();
-
             /**
              * While loop that uses resultSet.next to go through each individual Order and item and add item to order ArrayLists and order to orders ArrayList.
              */
@@ -121,33 +117,24 @@ public class DBConnection {
                 } else {
                     order.setIsReady(true);
                 }
-
                 order.setUser_userId(resultSet.getInt("user_userid"));
-
                 Item item = new Item();
                 item.setItemId(resultSet.getInt("item_id"));
                 item.setItemName(resultSet.getString("itemName"));
                 item.setItemDescription(resultSet.getString("itemDescription"));
                 item.setItemPrice(resultSet.getInt("itemPrice"));
-
                 Boolean addToOrders = true;
-                if (orders.isEmpty()) {
-                    order.setItems(item);
-                } else {
-
-                    for (int i = 0; i <= orders.size(); i++) {
-                        if (order.getOrderId() == orders.get(i).getOrderId()) {
-                            orders.get(i).setItems(item);
-                            addToOrders = false;
-                            break;
-                        } else {
-                            order.setItems(item);
-                            break;
-                        }
+                for (Order o : orders){
+                    if(o.getOrderId() == order.getOrderId()){
+                        o.setItems(item);
+                        addToOrders = false;
+                        break;
                     }
                 }
-                if (addToOrders)
+                if (addToOrders) {
+                    order.setItems(item);
                     orders.add(order);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
