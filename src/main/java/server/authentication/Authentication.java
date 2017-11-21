@@ -41,8 +41,12 @@ public class Authentication {
                 timevalue = (System.currentTimeMillis() * 1000) + 20000205238L;
                 expDate = new Date(timevalue);
 
-                token = JWT.create().withClaim("username", user.getUsername()).withKeyId(String.valueOf(user.getUserId()))
-                        .withExpiresAt(expDate).withIssuer("YOLO").sign(algorithm);
+                token = JWT.create()
+                        .withClaim("username", user.getUsername())
+                        .withKeyId(String.valueOf(user.getUserId()))
+                        .withExpiresAt(expDate)
+                        .withIssuer("YOLO")
+                        .sign(algorithm);
 
                 mcontroller.createToken(user, token);
 

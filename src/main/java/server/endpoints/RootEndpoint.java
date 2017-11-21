@@ -40,7 +40,11 @@ public class RootEndpoint {
 
         if (loginUser == null) {
 
-            return Response.status(401).type("plain/text").entity("User not authorized").build();
+            return Response
+                    .status(401)
+                    .type("plain/text")
+                    .entity("User not authorized")
+                    .build();
 
         } else {
 
@@ -49,10 +53,14 @@ public class RootEndpoint {
             String jsonUser = new Gson().toJson(loginUser, User.class);
 
             //return encrypted object in json format
-            return Response.status(200).type("application/json").entity(encryption.encryptDecryptXOR(jsonUser)).build();
+            return Response
+                    .status(200)
+                    .type("plain/text")
+                    .entity(encryption.encryptDecryptXOR(jsonUser))
+                    .build();
         }
-
     }
+
 
     /**
      * @param userAsJson
