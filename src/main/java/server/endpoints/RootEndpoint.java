@@ -34,31 +34,23 @@ public class RootEndpoint {
         // parse json object
         user = new Gson().fromJson(decryptedJSON, User.class);
 
-        if(user == null) {
-            return Response
-                    .status(404)
-                    .type("plain/text")
-                    .entity("Server error, user fail")
-                    .build();
-        }
-
         //Logikken der tjekker, hvorvidt en bruger findes eller ej
 
-            loginUser = auth.getMcontroller().authorizeUser(user);
+        loginUser = auth.getMcontroller().authorizeUser(user);
 
-            if (loginUser == null) {
+        if (loginUser == null) {
 
-                return Response.status(401).type("plain/text").entity("User not authorized").build();
+            return Response.status(401).type("plain/text").entity("User not authorized").build();
 
-            } else {
+        } else {
 
-                loginUser.setToken(auth.AuthUser(loginUser));
+            loginUser.setToken(auth.AuthUser(loginUser));
 
-                String jsonUser = new Gson().toJson(loginUser, User.class);
+            String jsonUser = new Gson().toJson(loginUser, User.class);
 
-                //return encrypted object in json format
-                return Response.status(200).type("application/json").entity(encryption.encryptDecryptXOR(jsonUser)).build();
-            }
+            //return encrypted object in json format
+            return Response.status(200).type("application/json").entity(encryption.encryptDecryptXOR(jsonUser)).build();
+        }
 
     }
 
