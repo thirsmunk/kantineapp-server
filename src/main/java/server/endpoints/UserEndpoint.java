@@ -44,7 +44,7 @@ public class UserEndpoint {
             result = ucontroller.addUser(userCreated);
             status = 200;
             //Logging for user created
-            Globals.log.writeLog(getClass().getName(), this, "Creation of user" + userCreated.getUsername() + " successful", 0);
+            Globals.log.writeLog(getClass().getName(), this, "Creation of user " + userCreated.getUsername() + " successful", 0);
 
         } catch (Exception e) {
             if (e.getClass() == BadRequestException.class) {
