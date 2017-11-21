@@ -330,13 +330,12 @@ public class DBConnection {
             resultSet = authorizeUser.executeQuery();
 
             /**
-             * While loop that uses resultSet.next to go through each individual User, controlling username, password and checking if the user is personnel.
+             * While loop that uses resultSet.next to go through the found user and saving it in Java language.
              */
             while (resultSet.next()) {
                 newUser = new User();
                 newUser.setUserId(resultSet.getInt("user_id"));
                 newUser.setUsername(resultSet.getString("username"));
-                newUser.setPassword(resultSet.getString("password"));
                 if (resultSet.getInt("isPersonel") == 1) {
                     newUser.setPersonel(true);
                 } else {
