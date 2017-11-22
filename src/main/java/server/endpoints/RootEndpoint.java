@@ -43,7 +43,7 @@ public class RootEndpoint {
             return Response
                     .status(401)
                     .type("plain/text")
-                    .entity("User not authorized")
+                    .entity(encryption.encryptDecryptXOR("\"User not authorized\""))
                     .build();
 
         } else {
@@ -85,13 +85,13 @@ public class RootEndpoint {
             return Response
                     .status(200)
                     .type("plain/text")
-                    .entity("Logged out.")
+                    .entity(encryption.encryptDecryptXOR("{\"Response:\":\"Logged out\"}"))
                     .build();
         } else {
             return Response
                     .status(500)
                     .type("plain/text")
-                    .entity("Server error, token might not exist.")
+                    .entity(encryption.encryptDecryptXOR("{\"Response:\":\"Server error, token might not exist.\"}"))
                     .build();
         }
     }
