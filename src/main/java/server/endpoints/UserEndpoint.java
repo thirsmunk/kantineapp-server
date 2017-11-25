@@ -89,7 +89,7 @@ public class UserEndpoint {
         if (result) {
             status = 200;
             //Logging for order created
-            Globals.log.writeLog(getClass().getName(), this, "Created order with id: " + orderCreated.getOrderId(), 0);
+            Globals.log.writeLog(getClass().getName(), this, "User with id: " + orderCreated.getUser_userId() + "created an order", 0);
 
         } else if (!result) {
             status = 500;
