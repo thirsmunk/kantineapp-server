@@ -89,7 +89,7 @@ public class UserEndpoint {
         if (result) {
             status = 200;
             //Logging for order created
-            Globals.log.writeLog(getClass().getName(), this, "User with id: " + orderCreated.getUser_userId() + "created an order", 0);
+            Globals.log.writeLog(getClass().getName(), this, "User with id: " + orderCreated.getUser_userId() + " created an order", 0);
 
         } else if (!result) {
             status = 500;
@@ -119,7 +119,7 @@ public class UserEndpoint {
         ArrayList<Order> foundOrders;
         foundOrders = ucontroller.findOrderById(id);
 
-        if (!(foundOrders == null)) {
+        if ((foundOrders != null)) {
             status = 200;
             Globals.log.writeLog(getClass().getName(), this, "Found orders from user with id: " + id, 0);
 
@@ -133,7 +133,7 @@ public class UserEndpoint {
         return Response
                 .status(status)
                 .type("plain/text")
-                //encrypt response to clien before sending
+                //encrypt response to client before sending
                 .entity(encryption.encryptDecryptXOR(ordersAsJson))
                 .build();
     }
