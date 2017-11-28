@@ -28,7 +28,7 @@ public class UserEndpoint {
      *
      * @param jsonUser
      * @return Response true or false
-     * Creates an user in the database and assigns a token through the AuthEndpoint class.
+     * Creates an user in the database and assigns a token through the Authentication class.
      * {"username":"****", "password":"****"}
      */
     @POST
@@ -39,12 +39,12 @@ public class UserEndpoint {
         try {
             //Parse Json with encrypted Json object to a String with the Encrypted Object thats no longer a Json ( {"rewqr"} => rewqr )
             //Then Decrypt the object and assign it as a Object in Json format ( rewqr => {"username":"..." }
-            jsonUser = encryption.decryptXOR(jsonUser);
+            jsonUser = encryption.encryptDecryptXOR(jsonUser);
             User userCreated = new Gson().fromJson(jsonUser, User.class);
             result = ucontroller.addUser(userCreated);
             status = 200;
             //Logging for user created
-            Globals.log.writeLog(getClass().getName(), this, "Creation of user" + userCreated.getUsername() + " successful", 0);
+            Globals.log.writeLog(getClass().getName(), this, "Creation of user " + userCreated.getUsername() + " successful", 0);
 
         } catch (Exception e) {
             if (e.getClass() == BadRequestException.class) {
@@ -61,9 +61,9 @@ public class UserEndpoint {
 
         return Response
                 .status(status)
-                .type("application/json")
+                .type("plain/text")
                 //encrypt response to clien before sending
-                .entity(encryption.encryptXOR("{\"userCreated\":\""+ result +"\"}"))
+                .entity(encryption.encryptDecryptXOR("{\"userCreated\":\""+ result +"\"}"))
                 .build();
     }
 
@@ -80,7 +80,7 @@ public class UserEndpoint {
     public Response createOrder(String jsonOrder) {
         //Parse Json with encrypted Json object to a String with the Encrypted Object thats no longer a Json ( {"rewqr"} => rewqr )
         //Then Decrypt the object and assign it as a Object in Json format ( rewqr => {"username":"..." }
-        jsonOrder = encryption.decryptXOR(jsonOrder);
+        jsonOrder = encryption.encryptDecryptXOR(jsonOrder);
         // parse json object
         Order orderCreated = new Gson().fromJson(jsonOrder, Order.class);
         int status = 500;
@@ -89,7 +89,7 @@ public class UserEndpoint {
         if (result) {
             status = 200;
             //Logging for order created
-            Globals.log.writeLog(getClass().getName(), this, "Created order with id: " + orderCreated.getOrderId(), 0);
+            Globals.log.writeLog(getClass().getName(), this, "User with id: " + orderCreated.getUser_userId() + " created an order", 0);
 
         } else if (!result) {
             status = 500;
@@ -99,9 +99,9 @@ public class UserEndpoint {
 
         return Response
                 .status(status)
-                .type("application/json")
+                .type("plain/text")
                 //encrypt response to clien before sending
-                .entity(encryption.encryptXOR("{\"orderCreated\":\"" + result + "\"}"))
+                .entity(encryption.encryptDecryptXOR("{\"orderCreated\":\"" + result + "\"}"))
                 .build();
     }
 
@@ -119,7 +119,7 @@ public class UserEndpoint {
         ArrayList<Order> foundOrders;
         foundOrders = ucontroller.findOrderById(id);
 
-        if (!(foundOrders == null)) {
+        if ((foundOrders != null)) {
             status = 200;
             Globals.log.writeLog(getClass().getName(), this, "Found orders from user with id: " + id, 0);
 
@@ -132,9 +132,9 @@ public class UserEndpoint {
 
         return Response
                 .status(status)
-                .type("application/json")
-                //encrypt response to clien before sending
-                .entity(encryption.encryptXOR(ordersAsJson))
+                .type("plain/text")
+                //encrypt response to client before sending
+                .entity(encryption.encryptDecryptXOR(ordersAsJson))
                 .build();
     }
 
@@ -159,9 +159,9 @@ public class UserEndpoint {
 
         return Response
                 .status(status)
-                .type("application/json")
-                //encrypt response to clien before sending
-                .entity(encryption.encryptXOR(itemsAsJson))
+                .type("plain/text")
+                //encrypt response to client before sending
+                .entity(encryption.encryptDecryptXOR(itemsAsJson))
                 .build();
     }
 }
