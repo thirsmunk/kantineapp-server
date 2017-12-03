@@ -251,22 +251,23 @@ public class DBConnection {
                 item.setItemPrice(resultSet.getInt("itemPrice"));
 
                 Boolean addToOrders = true;
-                if (orders.isEmpty()) {
-                    order.setItems(item);
-                } else {
 
-                    for (int i = 0; i < orders.size(); i++) {
-                        if (order.getOrderId() == orders.get(i).getOrderId()) {
-                            orders.get(i).setItems(item);
-                            addToOrders = false;
-                            break;
-                        } else {
-                            order.setItems(item);
-                            break;
-                        }
+                //Iterate through each order in the current orders array
+                for (Order o : orders) {
+                    //If the current object in the orders array equals the orderId in the resultset's current location
+                    if(o.getOrderId() == order.getOrderId()) {
+                        //Set addToOrders to false to make sure a new entry isn't made in the orders array, and that it instead gets added
+                        //to the orders i'th object item list
+                        addToOrders = false;
+                        o.setItems(item);
+                        break;
                     }
                 }
+
                 if (addToOrders) {
+                    //Add item to the order object
+                    order.setItems(item);
+                    //Add the order to the orders object
                     orders.add(order);
                 }
             }
