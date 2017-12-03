@@ -14,7 +14,6 @@ public class User {
     private String username;
     private String password;
     private boolean isPersonel;
-    private ArrayList<User> users;
     private Digester digester;
     private String token;
 
@@ -23,7 +22,6 @@ public class User {
         this.username = username;
         this.password = password;
         this.isPersonel = isPersonel;
-        this.users = new ArrayList<User>();
         this.digester = digester;
 
     }

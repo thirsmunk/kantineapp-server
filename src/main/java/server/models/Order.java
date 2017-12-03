@@ -12,7 +12,7 @@ public class Order {
     private int orderId;
     private Timestamp orderTime;
     private boolean isReady;
-    private int User_userId;
+    private int user_id;
     private ArrayList<Item> items;
 
     public Order() {
@@ -45,11 +45,11 @@ public class Order {
     }
 
     public int getUser_userId() {
-        return User_userId;
+        return user_id;
     }
 
     public void setUser_userId(int user_userId) {
-        User_userId = user_userId;
+        user_id = user_userId;
     }
 
     public ArrayList<Item> getItems() {
