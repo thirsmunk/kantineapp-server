@@ -12,12 +12,14 @@ import java.util.ArrayList;
  */
 public class UserController {
     private Digester dig;
+    private DBConnection db;
 
     /**
      * Constructor for the user controller
      */
     public UserController() {
         this.dig = new Digester();
+        this.db = new DBConnection();
     }
 
     /**
@@ -27,13 +29,12 @@ public class UserController {
      */
     public boolean addUser(User user) {
 
-        DBConnection dbConnection = new DBConnection();
         //sets a users password to a hashed with salt password and returns a boolean value if a user has been created
 
         String hashedPassword = dig.hashWithSalt(user.getPassword());
 
         user.setPassword(hashedPassword);
-        int result = dbConnection.addUser(user);
+        int result = db.addUser(user);
 
         if(result>0){
             return true;
@@ -49,8 +50,7 @@ public class UserController {
      * @return boolean
      */
     public boolean addOrder(int id, ArrayList<Item> items) {
-        DBConnection dbConnection = new DBConnection();
-        int result = dbConnection.addOrder(id, items);
+        int result = db.addOrder(id, items);
 
         if(result == 1){
             return true;
@@ -64,8 +64,7 @@ public class UserController {
      * @return orders
      */
     public ArrayList<Order> findOrderById(int userId) {
-        DBConnection dbConnection = new DBConnection();
-        ArrayList<Order> orders = dbConnection.findOrderById(userId);
+        ArrayList<Order> orders = db.findOrderById(userId);
         return orders;
     }
 
@@ -74,8 +73,7 @@ public class UserController {
      * @return items
      */
     public ArrayList<Item> getItems() {
-        DBConnection dbConnection = new DBConnection();
-        ArrayList<Item> items = dbConnection.getItems();
+        ArrayList<Item> items = db.getItems();
         return items;
     }
 

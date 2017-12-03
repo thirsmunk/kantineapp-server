@@ -11,8 +11,10 @@ import java.util.ArrayList;
  * @author Group YOLO
  */
 public class StaffController {
+    private DBConnection db;
 
     public StaffController() {
+        db = new DBConnection();
 
     }
 
@@ -21,8 +23,7 @@ public class StaffController {
      * @return orders
      */
     public ArrayList<Order> getOrders() {
-        DBConnection dbConnection = new DBConnection();
-        ArrayList<Order> orders = dbConnection.getOrders();
+        ArrayList<Order> orders = db.getOrders();
         return orders;
     }
 
@@ -32,8 +33,7 @@ public class StaffController {
      * @return boolean
      */
     public boolean makeReady(int orderID) {
-        DBConnection dbConnection = new DBConnection();
-        int result = dbConnection.makeReady(orderID);
+        int result = db.makeReady(orderID);
 
         if(result>0){
             return true;

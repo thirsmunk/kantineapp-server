@@ -14,12 +14,14 @@ import server.utility.Digester;
 
 public class MainController {
     private Digester dig;
+    private DBConnection db;
 
     /**
      * Constructor for main controller
      */
     public MainController() {
         dig = new Digester();
+        db = new DBConnection();
     }
 
     /**
@@ -28,10 +30,9 @@ public class MainController {
      * @return userCheck
      */
     public User authorizeUser(User user) {
-        DBConnection dbConnection = new DBConnection();
         String hashedPassword = dig.hashWithSalt(user.getPassword());
         user.setPassword(hashedPassword);
-        User userCheck = dbConnection.authorizeUser(user);
+        User userCheck = db.authorizeUser(user);
         return userCheck;
     }
 
@@ -41,8 +42,7 @@ public class MainController {
      * @return boolean
      */
     public boolean deleteToken(int id) {
-        DBConnection dbConnection = new DBConnection();
-       int result = dbConnection.deleteToken(id);
+       int result = db.deleteToken(id);
 
        if(result>0){
            return true;
@@ -56,8 +56,7 @@ public class MainController {
      * @return boolean
      */
     public boolean checkTokenOwner(String token) {
-        DBConnection dbConnection = new DBConnection();
-        String serverToken = dbConnection.tokenExists(token);
+        String serverToken = db.tokenExists(token);
         if(serverToken.equals(token)){
             return true;
         }
@@ -70,8 +69,7 @@ public class MainController {
      * @param token
      */
     public void createToken(User tokenUser, String token){
-        DBConnection dbConnection = new DBConnection();
-        dbConnection.createToken(tokenUser, token);
+        db.createToken(tokenUser, token);
     }
 
 }
